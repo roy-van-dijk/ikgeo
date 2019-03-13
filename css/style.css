@@ -1,0 +1,43 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Frutiger Lt Std";
+}
+body {
+    background-color: #f3f3f3;
+}
+#map {
+    position:absolute; 
+    top:0; 
+    bottom:0; 
+    width:100%;
+}
+.content {
+    margin-top: 65px;
+}
+nav {
+    top: 0;
+    left: 0;
+    height: 65px;
+    width: 100%;
+    background-color: #f3f3f3;
+    position: fixed;
+    z-index: 99;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+}
+.logo {
+    height: 100%;
+    line-height: 55px;
+    padding: 5px;
+    padding-left: 15px;
+    font-size: 35px;
+    font-weight: bold;
+    user-select: none;
+}
+.logo .red {
+    color: #e50011;
+}
+.logo .black {
+    color: #221915;
+}

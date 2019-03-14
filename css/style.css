@@ -1,8 +1,12 @@
+@font-face {
+    font-family: "Frutiger";
+    src: url("../fonts/frutiger.otf");
+}
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Frutiger Lt Std";
+    font-family: "Frutiger";
 }
 body {
     background-color: #f3f3f3;
@@ -24,7 +28,7 @@ nav {
     background-color: #f3f3f3;
     position: fixed;
     z-index: 99;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.5);
 }
 .logo {
     height: 100%;
@@ -40,4 +44,64 @@ nav {
 }
 .logo .black {
     color: #221915;
+}
+
+#hamburger {
+    width: 65px;
+    height: 65px;
+    border-radius: 500px;
+    position: fixed;
+    right: 5px;
+    top: 0px;
+    z-index: 9999;
+    cursor: pointer;
+    transition: transform 0.5s;
+}
+#hamburger .bar {
+    position: absolute;
+    display: block;
+    width: 44px;
+    left: 0;
+    right: 0;
+    margin: 0px auto;
+    height: 5px;
+    background-color: #e50011;
+    border-radius: 20px;
+    transition: transform 0.5s, background-color 0.3s;
+}
+
+#hamburger .bar:nth-child(1) {
+    top: 15px;
+}
+
+#hamburger .bar:nth-child(2) {
+    top: 30px;
+}
+
+#hamburger .bar:nth-child(3) {
+    top: 45px;
+}
+
+#hamburger.open .bar:nth-child(1) {
+    transform: translateY(15px) rotate(135deg);
+}
+#hamburger.open .bar:nth-child(2) {
+    transform: scaleX(0);
+}
+#hamburger.open .bar:nth-child(3) {
+    transform: translateY(-15px) rotate(-135deg);
+}
+#menu {
+    background-color: #f3f3f3;
+    position: fixed;
+    top: 0;
+    right: -300px;
+    bottom: 0px;
+    width: 300px;
+    z-index: 100;
+    box-shadow: inset 7px 0px 25px -7px rgba(0,0,0,0.5);
+    transition: transform 0.5s;
+}
+#menu.open {
+    transform: translateX(-100%);
 }

@@ -24,6 +24,21 @@
     <div class="bar"></div>
 </div>
 <div id="menu">
-    
+    <h1>Settings</h1>
+    <div class="setting">
+        <div class="title">Map style</div>
+        <select class="form-control" name="" id="map-style">
+            <option value="light-v10">Light</option>
+            <option value="dark-v10">Dark</option>
+            <option value="satellite-v9">Satellite</option>
+        </select>
+    </div>
+    <div class="setting">
+        <div class="title">Clustering</div>
+        <select class="form-control" name="" id="clustering">
+            <option value="true">Enabled</option>
+            <option value="false">Disabled</option>
+        </select>
+    </div>
 </div>
 <div class="content">

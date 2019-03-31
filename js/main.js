@@ -11,6 +11,10 @@ id("close-popup").addEventListener("click", function() {
     id("popup").classList.remove("open");
 });
 
+id("clustering").addEventListener("change", function() {
+    console.log("e");
+    map.getSource("parking_spots").cluster = false;
+});
 
 function id(id) {
     return document.getElementById(id);

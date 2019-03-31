@@ -19,6 +19,7 @@
         
 		const token = 'pk.eyJ1Ijoicm95ZXZhbmRpamsiLCJhIjoiY2p0NXJnbTRpMDh0ZTN6cnVyd24xaTdlbCJ9.kCp52B18Bm8EonaSgytxPQ';
         mapboxgl.accessToken = token;
+
         var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/light-v9',
@@ -27,22 +28,23 @@
         });
 
         map.on('load', function () {
+            loadMap();
+        });
+
+        function loadMap() {
 
             map.addSource("parking_spots", {
                 type: "geojson",
                 data: cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>)),
                 cluster: true,
                 clusterMaxZoom: 20,
-                clusterRadius: 25 // Radius of each cluster when clustering points (defaults to 50)
+                clusterRadius: 25
             });
             
             var start = [localStorage.long, localStorage.lat];
 
-            // make an initial directions request that
-            // starts and ends at the same location
             getRoute(start);
 
-            // Add starting point to the map
             map.addLayer({
                 id: 'point',
                 type: 'circle',
@@ -137,37 +139,37 @@
                     });
                 });
             });
-		});
 
-        map.on('click', 'unclustered-point', function (e) {
-            let popup = id("popup");
-            var coordinates = e.features[0].geometry.coordinates.slice();
-            var name = e.features[0].properties.Name;
-            var freeSpaceShort = e.features[0].properties.FreeSpaceShort;
-            var spaceSelector = popup.querySelector(".free-space-short");
-            localStorage.destLat = coordinates[1];
-            localStorage.destLong = coordinates[0];
-            
-            popup.classList.add("open");
-            popup.querySelector(".name").innerText = name;
-            
-            spaceSelector.classList.remove("free");
-            spaceSelector.classList.remove("full");
-            spaceSelector.innerText = "";
+            map.on('click', 'unclustered-point', function (e) {
+                let popup = id("popup");
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var name = e.features[0].properties.Name;
+                var freeSpaceShort = e.features[0].properties.FreeSpaceShort;
+                var spaceSelector = popup.querySelector(".free-space-short");
+                localStorage.destLat = coordinates[1];
+                localStorage.destLong = coordinates[0];
+                
+                popup.classList.add("open");
+                popup.querySelector(".name").innerText = name;
+                
+                spaceSelector.classList.remove("free");
+                spaceSelector.classList.remove("full");
+                spaceSelector.innerText = "";
 
-            if (freeSpaceShort === 0) {
-                spaceSelector.classList.add("full");
-                spaceSelector.innerText = "Full -\xa0";
-            } else {
-                spaceSelector.classList.add("free");
-                spaceSelector.innerText = "Free -\xa0";
-            }
+                if (freeSpaceShort === 0) {
+                    spaceSelector.classList.add("full");
+                    spaceSelector.innerText = "Full -\xa0";
+                } else {
+                    spaceSelector.classList.add("free");
+                    spaceSelector.innerText = "Free -\xa0";
+                }
 
-            spaceSelector.innerText += freeSpaceShort + "\xa0spaces";
-        });
+                spaceSelector.innerText += freeSpaceShort + "\xa0spaces";
+            });
 
-        map.on('mouseenter', 'clusters', function () { map.getCanvas().style.cursor = 'pointer'; });
-        map.on('mouseleave', 'clusters', function () { map.getCanvas().style.cursor = ''; });
+            map.on('mouseenter', 'clusters', function () { map.getCanvas().style.cursor = 'pointer'; });
+            map.on('mouseleave', 'clusters', function () { map.getCanvas().style.cursor = ''; });
+        }
 
         function cleanupJSON(json) {
             for (let i = 0; i < json.features.length; i++) {
@@ -193,46 +195,45 @@
                 var data = req.response.routes[0];
                 var route = data.geometry.coordinates;
                 var geojson = {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                    type: 'LineString',
-                    coordinates: route
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: route
+                    }
+                };
+
+                if (map.getSource('route')) {
+                    map.getSource('route').setData(geojson);
+                } else {
+                    map.addLayer({
+                        id: 'route',
+                        type: 'line',
+                        source: {
+                            type: 'geojson',
+                            data: {
+                                type: 'Feature',
+                                properties: {},
+                                geometry: {
+                                    type: 'LineString',
+                                    coordinates: geojson
+                                }
+                            }
+                        },
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': '#e50011',
+                            'line-width': 5,
+                            'line-opacity': 0.75
+                        }
+                    });
                 }
             };
-
-            if (map.getSource('route')) {
-                map.getSource('route').setData(geojson);
-            } else { // otherwise, make a new request
-                map.addLayer({
-                    id: 'route',
-                    type: 'line',
-                    source: {
-                        type: 'geojson',
-                        data: {
-                            type: 'Feature',
-                            properties: {},
-                            geometry: {
-                                type: 'LineString',
-                                coordinates: geojson
-                            }
-                        }
-                    },
-                    layout: {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    paint: {
-                        'line-color': '#e50011',
-                        'line-width': 5,
-                        'line-opacity': 0.75
-                    }
-                });
-            }
-            };
-                req.send();
+            req.send();
         }
-
 
         function id(id) {
             return document.getElementById(id);

@@ -4,18 +4,12 @@ id("hamburger").addEventListener("click", function() {
 });
 
 id("directions").addEventListener("click", function() {
-    navigator.geolocation.getCurrentPosition(function(location) {
-        localStorage.lat = location.coords.latitude;
-        localStorage.long = location.coords.longitude;
-    });
-    if (localStorage.getItem("lat") == null) {
-        alert("Could not get location. Please ensure your browser has permission to access your location.")
-    } else {
-        direct();
-    }
+    getRoute([localStorage.destLong, localStorage.destLat]);
 });
 
-
+id("close-popup").addEventListener("click", function() {
+    id("popup").classList.remove("open");
+});
 
 
 function id(id) {

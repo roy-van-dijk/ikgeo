@@ -135,14 +135,23 @@ nav {
 #popup h2 {
     font-size: 20px;
 }
+#close-popup {
+    font-size: 25px;
+    font-weight: bold;
+    color: #e50011;
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    cursor: pointer;
+}
 .free-space-short.free {
     color: #38ce6e;
 }
 .free-space-short.full {
-    color: #ce3838;
+    color: #e50011;
 }
 button {
-    background-color: #417aff;
+    background-color: #e50011;
     color: #f3f3f3;
     border: none;
     padding: 10px 20px;

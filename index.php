@@ -8,15 +8,15 @@
         <h2 class="name"></h2>
         <div class="free-space-short"></div>
         <button class="directions" id="directions">Directions</button>
-        <div class="lat">
-
-        </div>
-        <div class="long">
-
-        </div>
+        <div id="close-popup">&#10005;</div>
     </div>
 
     <script>
+        navigator.geolocation.getCurrentPosition(function(location) {
+            localStorage.lat = location.coords.latitude;
+            localStorage.long = location.coords.longitude;
+        });
+        
 		const token = 'pk.eyJ1Ijoicm95ZXZhbmRpamsiLCJhIjoiY2p0NXJnbTRpMDh0ZTN6cnVyd24xaTdlbCJ9.kCp52B18Bm8EonaSgytxPQ';
         mapboxgl.accessToken = token;
         var map = new mapboxgl.Map({
@@ -36,7 +36,7 @@
                 clusterRadius: 25 // Radius of each cluster when clustering points (defaults to 50)
             });
             
-            var start = [localStorage.lat, localStorage.long];
+            var start = [localStorage.long, localStorage.lat];
 
             // make an initial directions request that
             // starts and ends at the same location
@@ -81,18 +81,18 @@
                         "step",
                         ["get", "point_count"],
                         "#51bbd6",
-                        100,
+                        5,
                         "#f1f075",
-                        750,
+                        10,
                         "#f28cb1"
                     ],
                     "circle-radius": [
                         "step",
                         ["get", "point_count"],
                         20,
-                        100,
+                        5,
                         30,
-                        750,
+                        10,
                         40
                     ]
                 }
@@ -118,10 +118,10 @@
                 source: "parking_spots",
                 filter: ["!", ["has", "point_count"]],
                 paint: {
-                    "circle-color": "#fff",
+                    "circle-color": "#f3f3f3",
                     "circle-radius": 6,
                     "circle-stroke-width": 1,
-                    "circle-stroke-color": "#11b4da"
+                    "circle-stroke-color": "#e50011"
                 }
             }); 
 
@@ -182,15 +182,10 @@
             return json;
         }
 
-        function direct() {
-            getRoute([localStorage.destLat, localStorage.destLong]);
-        }
-
         function getRoute(end) {
             var lat = localStorage.lat;
             var long = localStorage.long;
-            var url = 'https://api.mapbox.com/directions/v5/mapbox/driving/'+lat+','+long+';'+end[0]+','+end[1]+'?overview=full&geometries=geojson&access_token='+token;
-            console.log(url);
+            var url = 'https://api.mapbox.com/directions/v5/mapbox/driving/'+long+','+lat+';'+end[0]+','+end[1]+'?overview=full&geometries=geojson&access_token='+token;
             var req = new XMLHttpRequest();
             req.responseType = 'json';
             req.open('GET', url, true);

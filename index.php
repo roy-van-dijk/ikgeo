@@ -24,7 +24,7 @@
             container: 'map',
             style: 'mapbox://styles/mapbox/light-v9',
             center: [4.9036, 52.3680],
-            zoom: 10
+            zoom: 7,
         });
 
         map.on('load', function () {
@@ -33,18 +33,39 @@
 
         function loadMap() {
 
+            map.flyTo({
+                center: [4.9036, 52.3680],
+                zoom: 10
+            });
+
             map.addSource("parking_spots", {
                 type: "geojson",
                 data: cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>)),
                 cluster: true,
                 clusterMaxZoom: 20,
-                clusterRadius: 25
+                clusterRadius: 40
+            });
+
+            map.loadImage('assets/pin.png', function(error, image) {
+                if (error) throw error;
+                map.addImage('pin', image);
+            });
+
+            map.loadImage('assets/pin-active.png', function(error, image) {
+                if (error) throw error;
+                map.addImage('pin-active', image);
+            });
+
+            map.loadImage('assets/pin-filled.png', function(error, image) {
+                if (error) throw error;
+                map.addImage('pin-filled', image);
             });
             
             var start = [localStorage.long, localStorage.lat];
 
             getRoute(start);
 
+            // Current location point
             map.addLayer({
                 id: 'point',
                 type: 'circle',
@@ -116,14 +137,22 @@
                 
             map.addLayer({
                 id: "unclustered-point",
-                type: "circle",
+                type: "symbol",
                 source: "parking_spots",
                 filter: ["!", ["has", "point_count"]],
+                layout: {
+                    "icon-image": "pin-filled",
+                    "icon-size": 0.12,
+                    "icon-offset": [0, -250],
+                    "text-field": "{FreeSpaceShort}",
+                    "text-font": ["Roboto Black"],
+                    "text-size": 16,
+                    "text-offset": [0, -2.2],
+                    "text-allow-overlap" : true,
+                    "icon-allow-overlap" : true
+                },
                 paint: {
-                    "circle-color": "#f3f3f3",
-                    "circle-radius": 6,
-                    "circle-stroke-width": 1,
-                    "circle-stroke-color": "#e50011"
+                    "text-color": "#f3f3f3"
                 }
             }); 
 
@@ -141,6 +170,10 @@
             });
 
             map.on('click', 'unclustered-point', function (e) {
+                // var features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] });
+                // var clusterId = features[0].properties;
+                // features[0].layer.layout["icon-size"] = 50;
+
                 let popup = id("popup");
                 var coordinates = e.features[0].geometry.coordinates.slice();
                 var name = e.features[0].properties.Name;
@@ -169,6 +202,9 @@
 
             map.on('mouseenter', 'clusters', function () { map.getCanvas().style.cursor = 'pointer'; });
             map.on('mouseleave', 'clusters', function () { map.getCanvas().style.cursor = ''; });
+            map.on('mouseenter', 'unclustered-point', function () { map.getCanvas().style.cursor = 'pointer'; });
+            map.on('mouseleave', 'unclustered-point', function () { map.getCanvas().style.cursor = ''; });
+            
         }
 
         function cleanupJSON(json) {

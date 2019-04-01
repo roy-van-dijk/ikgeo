@@ -48,17 +48,7 @@
 
             map.loadImage('assets/pin.png', function(error, image) {
                 if (error) throw error;
-                map.addImage('pin', image);
-            });
-
-            map.loadImage('assets/pin-active.png', function(error, image) {
-                if (error) throw error;
                 map.addImage('pin-active', image);
-            });
-
-            map.loadImage('assets/pin-filled.png', function(error, image) {
-                if (error) throw error;
-                map.addImage('pin-filled', image);
             });
             
             var start = [localStorage.long, localStorage.lat];
@@ -141,18 +131,18 @@
                 source: "parking_spots",
                 filter: ["!", ["has", "point_count"]],
                 layout: {
-                    "icon-image": "pin-filled",
+                    "icon-image": "pin-active",
                     "icon-size": 0.12,
                     "icon-offset": [0, -250],
                     "text-field": "{FreeSpaceShort}",
                     "text-font": ["Roboto Black"],
-                    "text-size": 16,
-                    "text-offset": [0, -2.2],
+                    "text-size": 14,
+                    "text-offset": [0, -2.6],
                     "text-allow-overlap" : true,
                     "icon-allow-overlap" : true
                 },
                 paint: {
-                    "text-color": "#f3f3f3"
+                    "text-color": "#221915"
                 }
             }); 
 

@@ -4,6 +4,37 @@
         
     </div>
 
+    <div class="legend">
+        <table>
+            <tr>
+                <td><div class="legend-location"></div></td>
+                <td>Current location</td>
+            </tr>
+            <tr>
+                <td><div class="legend-route"></div></td>
+                <td>Route</td>
+            </tr>
+            <tr>
+                <td><div class="legend-10"></div></td>
+                <td>10+ parking garages</td>
+            </tr>
+            <tr>
+                <td><div class="legend-5"></div></td>
+                <td>5+ parking garages</td>
+            </tr>
+            <tr>
+                <td><div class="legend-2"></div></td>
+                <td>2+ parking garages</td>
+            </tr>
+            <tr>
+                <td><div class="legend-parking-garage"></div></td>
+                <td>Parking garage</td>
+            </tr>
+        </table>
+    </div>
+
+    <button id="legend-button">Show legend</button>
+
     <div id="popup">
         <h2 class="name"></h2>
         <div class="free-space-short"></div>
@@ -75,7 +106,9 @@
                 },
                 paint: {
                     'circle-radius': 5,
-                    'circle-color': '#e50011'
+                    'circle-color': '#221915',
+                    'circle-stroke-color': '#e50011',
+                    'circle-stroke-width': 3
                 }
             });
 
@@ -90,6 +123,7 @@
                     //   * Blue, 20px circles when point count is less than 100
                     //   * Yellow, 30px circles when point count is between 100 and 750
                     //   * Pink, 40px circles when point count is greater than or equal to 750
+                    "circle-opacity": 0.7,
                     "circle-color": [
                         "step",
                         ["get", "point_count"],

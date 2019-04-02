@@ -16,11 +16,21 @@ id("clustering").addEventListener("change", function() {
     map.getSource("parking_spots").cluster = false;
 });
 
+id("legend-button").addEventListener("click", function() {
+    el(".legend").classList.toggle("open");
+    this.classList.toggle("open");
+    if (this.innerText === "Show legend") {
+        this.innerText = "Hide legend";
+    } else {
+        this.innerText = "Show legend";
+    }
+});
+
 function id(id) {
     return document.getElementById(id);
 }
 function el(el) {
-    return document.querySelector(el)[0];
+    return document.querySelector(el);
 }
 function els(els) {
     return document.querySelectorAll(els);

@@ -24,8 +24,8 @@
     <div class="bar"></div>
 </div>
 <div id="menu">
-    <h1>Settings</h1>
-    <div class="setting">
+    <h1>Options</h1>
+    <!-- <div class="setting">
         <div class="title">Map style</div>
         <select class="form-control" name="" id="map-style">
             <option value="light-v10">Light</option>
@@ -38,6 +38,16 @@
         <select class="form-control" name="" id="clustering">
             <option value="true">Enabled</option>
             <option value="false">Disabled</option>
+        </select>
+    </div> -->
+    <div class="setting">
+        <div class="title">Hide parking garages at:</div>
+        <select class="form-control" name="" id="spot-filter">
+            <option value="0">0 spots</option>
+            <option value="10">Under 10 spots</option>
+            <option value="25">Under 25 spots</option>
+            <option value="50">Under 50 spots</option>
+            <option value="10000" selected="selected">Don't hide</option>
         </select>
     </div>
 </div>

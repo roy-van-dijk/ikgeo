@@ -106,7 +106,7 @@
                 },
                 paint: {
                     'circle-radius': 5,
-                    'circle-color': '#221915',
+                    'circle-color': '#f3f3f3',
                     'circle-stroke-color': '#e50011',
                     'circle-stroke-width': 3
                 }
@@ -228,7 +228,9 @@
             map.on('mouseleave', 'clusters', function () { map.getCanvas().style.cursor = ''; });
             map.on('mouseenter', 'unclustered-point', function () { map.getCanvas().style.cursor = 'pointer'; });
             map.on('mouseleave', 'unclustered-point', function () { map.getCanvas().style.cursor = ''; });
-            
+
+            var scale = new mapboxgl.ScaleControl();
+            map.addControl(scale, 'bottom-right');
         }
 
         function cleanupJSON(json) {
@@ -239,6 +241,11 @@
                 current.FreeSpaceLong = parseInt(current.FreeSpaceLong) || 0;
                 current.LongCapacity = parseInt(current.LongCapacity) || 0;
                 current.Name = current.Name.match(/[^\d]*$/)[0];
+
+                if (current.Name.toLowerCase().includes("nognietoperationeel")) {
+                    json.features[i].geometry.coordinates[0] = 4.887118;
+                    json.features[i].geometry.coordinates[1] = 52.355649;
+                }
                 // current.Name = current.Name.replace(/([A-Z])/g, ' $1').trim();
             }
             return json;

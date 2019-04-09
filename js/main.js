@@ -11,10 +11,10 @@ id("close-popup").addEventListener("click", function() {
     id("popup").classList.remove("open");
 });
 
-id("clustering").addEventListener("change", function() {
-    console.log("e");
-    map.getSource("parking_spots").cluster = false;
-});
+// id("clustering").addEventListener("change", function() {
+//     console.log("e");
+//     map.getSource("parking_spots").cluster = false;
+// });
 
 id("legend-button").addEventListener("click", function() {
     el(".legend").classList.toggle("open");

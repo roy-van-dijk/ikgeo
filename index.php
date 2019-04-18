@@ -48,6 +48,12 @@
             localStorage.long = location.coords.longitude;
         });
         
+        var scale = new mapboxgl.ScaleControl();
+        var hidden = 10000;
+        var clusterRadius = 40;
+        var clusterMaxZoom = 20;
+        var clustering = true;
+        
 		const token = 'pk.eyJ1Ijoicm95ZXZhbmRpamsiLCJhIjoiY2p0NXJnbTRpMDh0ZTN6cnVyd24xaTdlbCJ9.kCp52B18Bm8EonaSgytxPQ';
         mapboxgl.accessToken = token;
 
@@ -72,9 +78,9 @@
             map.addSource("parking_spots", {
                 type: "geojson",
                 data: cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>)),
-                cluster: true,
-                clusterMaxZoom: 20,
-                clusterRadius: 40
+                cluster: clustering,
+                clusterMaxZoom: clusterMaxZoom,
+                clusterRadius: clusterRadius
             });
 
             map.loadImage('assets/pin.png', function(error, image) {
@@ -112,6 +118,7 @@
                 }
             });
 
+            // Cluster layer
             map.addLayer({
                 id: "clusters",
                 type: "circle",
@@ -145,6 +152,7 @@
                 }
             });
                 
+            // Cluster count layer
             map.addLayer({
                 id: "cluster-count",
                 type: "symbol",
@@ -159,6 +167,7 @@
                 }
             });
                 
+            // Unclustered layer
             map.addLayer({
                 id: "unclustered-point",
                 type: "symbol",
@@ -172,7 +181,7 @@
                     "text-font": ["Roboto Black"],
                     "text-size": 14,
                     "text-offset": [0, -2.6],
-                    "text-allow-overlap" : true,
+                    "text-allow-overlap" : false,
                     "icon-allow-overlap" : true
                 },
                 paint: {
@@ -229,7 +238,6 @@
             map.on('mouseenter', 'unclustered-point', function () { map.getCanvas().style.cursor = 'pointer'; });
             map.on('mouseleave', 'unclustered-point', function () { map.getCanvas().style.cursor = ''; });
 
-            var scale = new mapboxgl.ScaleControl();
             map.addControl(scale, 'bottom-right');
         }
 
@@ -300,6 +308,18 @@
                 }
             };
             req.send();
+        }
+
+        function resetMap() {
+            map.removeControl(scale);
+            map.removeLayer("clusters");
+            map.removeLayer("cluster-count");
+            map.removeLayer("unclustered-point");
+            map.removeLayer("point");
+            map.removeSource("point");
+            map.removeImage("pin-active");
+            map.removeSource("parking_spots");
+            loadMap();
         }
 
         function id(id) {

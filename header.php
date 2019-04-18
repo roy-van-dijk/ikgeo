@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>AmsterPark</title>
     <script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="icon" type="image/png" href="assets/logo.png" />
@@ -32,21 +32,22 @@
             <option value="dark-v10">Dark</option>
             <option value="satellite-v9">Satellite</option>
         </select>
-    </div>
+    </div>-->
     <div class="setting">
         <div class="title">Clustering</div>
         <select class="form-control" name="" id="clustering">
             <option value="true">Enabled</option>
             <option value="false">Disabled</option>
         </select>
-    </div> -->
+    </div>
     <div class="setting">
-        <div class="title">Hide parking garages at:</div>
+        <div class="title">Hide parking garages:</div>
         <select class="form-control" name="" id="spot-filter">
             <option value="0">0 spots</option>
             <option value="10">Under 10 spots</option>
             <option value="25">Under 25 spots</option>
             <option value="50">Under 50 spots</option>
+            <option value="100">Under 100 spots</option>
             <option value="10000" selected="selected">Don't hide</option>
         </select>
     </div>

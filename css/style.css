@@ -11,6 +11,23 @@
 }
 body {
     background-color: #f3f3f3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+}
+.spinner {
+    background-image: url("../assets/spinner.svg");
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 #map {
     position:absolute; 
@@ -191,9 +208,14 @@ button {
     right: 10px;
     bottom: 10px;
 }
+.setting {
+    margin-top: 15px;
+}
 .setting .title {
     margin-bottom: 5px;
-    margin-top: 15px;
+}
+.setting button {
+    width: 100%;
 }
 .form-control {
     display: block;

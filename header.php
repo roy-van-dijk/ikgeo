@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<div class="spinner">
+
+</div>
 <nav>
     <div class="logo">
         <span class="red">Amster</span><span class="black">Park</span>
@@ -25,14 +28,14 @@
 </div>
 <div id="menu">
     <h1>Options</h1>
-    <!-- <div class="setting">
+    <div class="setting">
         <div class="title">Map style</div>
         <select class="form-control" name="" id="map-style">
             <option value="light-v10">Light</option>
             <option value="dark-v10">Dark</option>
             <option value="satellite-v9">Satellite</option>
         </select>
-    </div>-->
+    </div>
     <div class="setting">
         <div class="title">Clustering</div>
         <select class="form-control" name="" id="clustering">
@@ -41,7 +44,14 @@
         </select>
     </div>
     <div class="setting">
-        <div class="title">Hide parking garages:</div>
+        <div class="title">Overlap</div>
+        <select class="form-control" name="" id="overlap">
+            <option value="false" selected="selected">Disabled</option>
+            <option value="true">Enabled</option>
+        </select>
+    </div>
+    <div class="setting">
+        <div class="title">Filter parking garages</div>
         <select class="form-control" name="" id="spot-filter">
             <option value="0">0 spots</option>
             <option value="10">Under 10 spots</option>
@@ -50,6 +60,9 @@
             <option value="100">Under 100 spots</option>
             <option value="10000" selected="selected">Don't hide</option>
         </select>
+    </div>
+    <div class="setting">
+        <button id="clear-directions">Clear directions</button>
     </div>
 </div>
 <div class="content">

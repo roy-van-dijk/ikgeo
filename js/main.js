@@ -11,13 +11,24 @@ id("close-popup").addEventListener("click", function() {
     id("popup").classList.remove("open");
 });
 
+id("map-style").addEventListener("change", function() {
+    mapStyle = this.value;
+    clearMap();
+    map = null;
+    map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/' + mapStyle,
+        center: [4.9036, 52.3680],
+        zoom: 7,
+    });
+    map.on('load', function () {
+        loadMap();
+        applyFilters();
+    });
+});
+
 id("spot-filter").addEventListener("change", function() {
-    hidden = this.value;
-    if (hidden == 10000) {
-        resetMap();
-    } else {
-        map.setFilter('unclustered-point', [">", "FreeSpaceShort", parseInt(this.value)]); 
-    }
+    applyFilters();
 });
 
 id("clustering").addEventListener("change", function() {
@@ -27,7 +38,24 @@ id("clustering").addEventListener("change", function() {
     } else {
         disableClustering();
     }
-    
+    resetFilterOptions();
+});
+
+id("overlap").addEventListener("change", function() {
+    if (this.value === "true") {
+        overlap = true;
+        resetMap();
+        
+    } else {
+        overlap = false;
+        resetMap();
+    }
+    resetFilterOptions();
+});
+
+id("clear-directions").addEventListener("click", function() {
+    start = [localStorage.long, localStorage.lat];
+    getRoute(start);
 });
 
 id("legend-button").addEventListener("click", function() {
@@ -40,6 +68,16 @@ id("legend-button").addEventListener("click", function() {
     }
 });
 
+function resetFilterOptions() {
+    var select = id("spot-filter");
+    var options = select.options;
+    for (var option, j = 0; option = options[j]; j++) {
+        if (option.value == 10000) {
+            select.selectedIndex = j;
+            break;
+        }
+    }
+}
 function enableClustering() {
     clusterRadius = 40;
     clustering = true;

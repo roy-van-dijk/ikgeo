@@ -43,27 +43,29 @@
     </div>
 
     <script>
-        navigator.geolocation.getCurrentPosition(function(location) {
-            localStorage.lat = location.coords.latitude;
-            localStorage.long = location.coords.longitude;
-        });
-        
+        const token = 'pk.eyJ1Ijoicm95ZXZhbmRpamsiLCJhIjoiY2p0NXJnbTRpMDh0ZTN6cnVyd24xaTdlbCJ9.kCp52B18Bm8EonaSgytxPQ';
+        mapboxgl.accessToken = token;
         var scale = new mapboxgl.ScaleControl();
         var hidden = 10000;
         var clusterRadius = 40;
         var clusterMaxZoom = 20;
         var clustering = true;
-        
-		const token = 'pk.eyJ1Ijoicm95ZXZhbmRpamsiLCJhIjoiY2p0NXJnbTRpMDh0ZTN6cnVyd24xaTdlbCJ9.kCp52B18Bm8EonaSgytxPQ';
-        mapboxgl.accessToken = token;
-
+        var mapStyle = 'light-v9';
+        var start = [0, 0];
+        var overlap = false;
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/light-v9',
+            style: 'mapbox://styles/mapbox/' + mapStyle,
             center: [4.9036, 52.3680],
             zoom: 7,
         });
 
+        navigator.geolocation.getCurrentPosition(function(location) {
+            localStorage.lat = location.coords.latitude;
+            localStorage.long = location.coords.longitude;
+            start = [localStorage.long, localStorage.lat];
+        });
+        
         map.on('load', function () {
             loadMap();
         });
@@ -80,7 +82,10 @@
                 data: cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>)),
                 cluster: clustering,
                 clusterMaxZoom: clusterMaxZoom,
-                clusterRadius: clusterRadius
+                clusterRadius: clusterRadius,
+                clusterProperties: {
+                    sum: ["+", ["get", "FreeSpaceShort"], ["get", "FreeSpaceShort"]]
+                }
             });
 
             map.loadImage('assets/pin.png', function(error, image) {
@@ -88,8 +93,6 @@
                 map.addImage('pin-active', image);
             });
             
-            var start = [localStorage.long, localStorage.lat];
-
             getRoute(start);
 
             // Current location point
@@ -125,11 +128,6 @@
                 source: "parking_spots",
                 filter: ["has", "point_count"],
                 paint: {
-                    // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-                    // with three steps to implement three types of circles:
-                    //   * Blue, 20px circles when point count is less than 100
-                    //   * Yellow, 30px circles when point count is between 100 and 750
-                    //   * Pink, 40px circles when point count is greater than or equal to 750
                     "circle-opacity": 0.7,
                     "circle-color": [
                         "step",
@@ -159,7 +157,7 @@
                 source: "parking_spots",
                 filter: ["has", "point_count"],
                 layout: {
-                    "text-field": "{point_count_abbreviated}",
+                    "text-field": ["get", "sum"],
                     "text-font": ["Arial Unicode MS Bold"],
                     "text-size": 16,
                     "text-offset": [0, 0]
@@ -181,7 +179,8 @@
                     "text-font": ["Roboto Black"],
                     "text-size": 14,
                     "text-offset": [0, -2.6],
-                    "text-allow-overlap" : false,
+                    "text-optional": true,
+                    "text-allow-overlap" : overlap,
                     "icon-allow-overlap" : true
                 },
                 paint: {
@@ -203,10 +202,6 @@
             });
 
             map.on('click', 'unclustered-point', function (e) {
-                // var features = map.queryRenderedFeatures(e.point, { layers: ['unclustered-point'] });
-                // var clusterId = features[0].properties;
-                // features[0].layer.layout["icon-size"] = 50;
-
                 let popup = id("popup");
                 var coordinates = e.features[0].geometry.coordinates.slice();
                 var name = e.features[0].properties.Name;
@@ -311,6 +306,12 @@
         }
 
         function resetMap() {
+            applyFilters();
+            clearMap();
+            loadMap();
+        }
+
+        function clearMap() {
             map.removeControl(scale);
             map.removeLayer("clusters");
             map.removeLayer("cluster-count");
@@ -319,7 +320,15 @@
             map.removeSource("point");
             map.removeImage("pin-active");
             map.removeSource("parking_spots");
-            loadMap();
+        }
+
+        function applyFilters() {
+            if (id("spot-filter").value == 10000) {
+                // resetMap();
+                map.setFilter('unclustered-point');
+            } else {
+                map.setFilter('unclustered-point', [">", "FreeSpaceShort", parseInt(id("spot-filter").value)]); 
+            }
         }
 
         function id(id) {

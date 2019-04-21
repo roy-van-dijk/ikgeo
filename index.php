@@ -51,32 +51,33 @@
         var clusterMaxZoom = 20;
         var clustering = true;
         var mapStyle = 'light-v9';
-        var start = [0, 0];
+        var start = [];
         var overlap = false;
         const data = cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>));
         var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/' + mapStyle,
             center: [4.9036, 52.3680],
-            zoom: 7,
+            zoom: 10,
         });
 
-        navigator.geolocation.getCurrentPosition(function(location) {
-            localStorage.lat = location.coords.latitude;
-            localStorage.long = location.coords.longitude;
-            start = [localStorage.long, localStorage.lat];
-        });
-        
         map.on('load', function () {
             loadMap();
+            navigator.geolocation.getCurrentPosition(function(location) {
+                localStorage.lat = location.coords.latitude;
+                localStorage.long = location.coords.longitude;
+                start = [localStorage.long, localStorage.lat];
+                getRoute(start);
+                resetMap();
+            });
         });
 
         function loadMap() {
 
-            map.flyTo({
-                center: [4.9036, 52.3680],
-                zoom: 10
-            });
+            // map.flyTo({
+            //     center: [4.9036, 52.3680],
+            //     zoom: 10
+            // });
 
             map.addSource("parking_spots", {
                 type: "geojson",
@@ -91,10 +92,14 @@
 
             map.loadImage('assets/pin.png', function(error, image) {
                 if (error) throw error;
-                map.addImage('pin-active', image);
+                if (!map.hasImage('pin-active')) {
+                    map.addImage('pin-active', image);
+                }
             });
             
-            getRoute(start);
+            // if (localStorage.getItem("destLong") !== null && localStorage.getItem("destLat") !== null) {
+            //     getRoute(start);
+            // }
 
             // Current location point
             map.addLayer({
@@ -319,7 +324,7 @@
             map.removeLayer("unclustered-point");
             map.removeLayer("point");
             map.removeSource("point");
-            map.removeImage("pin-active");
+            // map.removeImage("pin-active");
             map.removeSource("parking_spots");
         }
 

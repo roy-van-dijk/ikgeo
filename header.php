@@ -34,6 +34,7 @@
             <option value="light-v10">Light</option>
             <option value="dark-v10">Dark</option>
             <option value="satellite-v9">Satellite</option>
+            <option value="streets-v11">Streets</option>
         </select>
     </div>
     <div class="setting">

@@ -53,6 +53,7 @@
         var mapStyle = 'light-v9';
         var start = [0, 0];
         var overlap = false;
+        const data = cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>));
         var map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/' + mapStyle,
@@ -79,7 +80,7 @@
 
             map.addSource("parking_spots", {
                 type: "geojson",
-                data: cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>)),
+                data: data,
                 cluster: clustering,
                 clusterMaxZoom: clusterMaxZoom,
                 clusterRadius: clusterRadius,
@@ -323,12 +324,26 @@
         }
 
         function applyFilters() {
-            if (id("spot-filter").value == 10000) {
-                // resetMap();
-                map.setFilter('unclustered-point');
+            let filterValue = parseInt(id("spot-filter").value);
+
+            if (filterValue == 10000) {
+                map.setFilter('unclustered-point', ["!", ["has", "point_count"]]);
+                map.getSource('parking_spots').setData(data);
             } else {
-                map.setFilter('unclustered-point', [">", "FreeSpaceShort", parseInt(id("spot-filter").value)]); 
+                map.setFilter('unclustered-point', [">", "FreeSpaceShort", filterValue]);
+                map.getSource('parking_spots').setData(getFilteredData(filterValue));
             }
+        }
+
+        function getFilteredData(value) {
+            let newData = JSON.parse(JSON.stringify(data));
+            
+            for (let i = 0; i < newData.features.length; i++) {
+                if (newData.features[i].properties.FreeSpaceShort < value) {
+                    newData.features.splice(i, 1);
+                }
+            }
+            return newData;
         }
 
         function id(id) {

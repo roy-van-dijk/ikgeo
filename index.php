@@ -16,11 +16,11 @@
             </tr>
             <tr>
                 <td><div class="legend-10"></div></td>
-                <td>10+ parking garages</td>
+                <td>3000+ parking spots</td>
             </tr>
             <tr>
                 <td><div class="legend-5"></div></td>
-                <td>5+ parking garages</td>
+                <td>500+ parking spots</td>
             </tr>
             <tr>
                 <td><div class="legend-2"></div></td>
@@ -141,20 +141,20 @@
                     "circle-opacity": 0.7,
                     "circle-color": [
                         "step",
-                        ["get", "point_count"],
+                        ["get", "sum"],
                         "#51bbd6",
-                        5,
+                        500,
                         "#f1f075",
-                        10,
+                        3000,
                         "#f28cb1"
                     ],
                     "circle-radius": [
                         "step",
-                        ["get", "point_count"],
+                        ["get", "sum"],
                         20,
-                        5,
+                        500,
                         30,
-                        10,
+                        3000,
                         40
                     ]
                 }

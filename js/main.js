@@ -23,7 +23,7 @@ id("map-style").addEventListener("change", function() {
         container: 'map',
         style: 'mapbox://styles/mapbox/' + mapStyle,
         center: [4.9036, 52.3680],
-        zoom: 7,
+        zoom: 10,
     });
     map.on('load', function () {
         loadMap();

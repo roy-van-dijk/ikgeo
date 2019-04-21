@@ -70,6 +70,10 @@
                 getRoute(start);
                 resetMap();
             });
+            el(".spinner").classList.add("hiding");
+            setTimeout(function() {
+                el(".spinner").classList.add("hidden");
+            }, 1000);
         });
 
         function loadMap() {
@@ -324,7 +328,6 @@
             map.removeLayer("unclustered-point");
             map.removeLayer("point");
             map.removeSource("point");
-            // map.removeImage("pin-active");
             map.removeSource("parking_spots");
         }
 

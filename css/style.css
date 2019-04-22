@@ -19,6 +19,9 @@ body {
     width: 100%;
     height: 100%;
 }
+.hidden {
+    display: none;
+}
 .spinner {
     background-image: url("../assets/spinner.svg");
     width: 100%;
@@ -301,10 +304,10 @@ button {
     border-radius: 20px;
 }
 .legend-route {
-    width: 20px;
+    width: 25px;
     height: 5px;
     border-radius: 5px;
-    background-color: #e50011;
+    background-color: #5b79ff;
 }
 .legend-10 {
     background-color: #f28cb1;
@@ -335,6 +338,40 @@ button {
 }
 .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl {
     margin: 0px 7px 7px 0px;
+}
+.modal-wrapper {
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.7);
+}
+.modal-content {
+    width: 100%;
+    max-width: 450px;
+    /* height: 200px; */
+    background-color: #f3f3f3;
+    color: #e50011;
+    position: absolute;
+    padding: 15px;
+    border-radius: 5px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+}
+.modal-content h3 {
+    text-align: center;
+}
+.modal-content .logo {
+    line-height: unset;
+    text-align: center;
+    height: unset;
+}
+.modal-content button {
+    float: right;
 }
 @media (min-width: 500px) {
     #popup {

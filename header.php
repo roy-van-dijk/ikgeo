@@ -31,10 +31,17 @@
     <div class="setting">
         <div class="title">Map style</div>
         <select class="form-control" name="" id="map-style">
-            <option value="light-v10">Light</option>
-            <option value="dark-v10">Dark</option>
-            <option value="satellite-v9">Satellite</option>
-            <option value="streets-v11">Streets</option>
+            <option value="mapbox://styles/mapbox/light-v10">Light</option>
+            <option value="mapbox://styles/mapbox/dark-v10">Dark</option>
+            <option value="mapbox://styles/mapbox/satellite-v9">Satellite</option>
+            <option value="mapbox://styles/mapbox/streets-v11">Streets</option>
+        </select>
+    </div>
+    <div class="setting">
+        <div class="title">Traffic</div>
+        <select class="form-control" name="" id="traffic">
+            <option value="true">Enabled</option>
+            <option value="false" selected="selected">Disabled</option>
         </select>
     </div>
     <div class="setting">

@@ -4,6 +4,19 @@
         
     </div>
 
+    <div class="modal-wrapper hidden">
+        <div class="modal-content">
+            <h3>Welcome to</h3>
+            <div class="logo">
+                <span class="red">Amster</span><span class="black">Park</span>
+            </div>
+            <p>
+                AmsterPark lets you find parking garages in Amsterdam with space left to park your car. Numbers on the map correspond to the amount of space a parking garage has left. When you click on a parking garage, directions from your current location can be given. Check out the legend in the bottom left if anything is unclear. 
+            </p>
+            <button id="close-modal">Lets go!</button>
+        </div>
+    </div>
+
     <div class="legend">
         <table>
             <tr>
@@ -50,16 +63,83 @@
         var clusterRadius = 40;
         var clusterMaxZoom = 20;
         var clustering = true;
-        var mapStyle = 'light-v9';
+        var mapStyle = 'mapbox://styles/mapbox/light-v9';
         var start = [];
         var overlap = false;
         const data = cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>));
+        var traffic = {
+            "version": 8,
+            "name": "Mapbox Traffic tileset v1",
+            "sources": {
+                "mapbox-traffic": {
+                    "url": "mapbox://mapbox.mapbox-traffic-v1",
+                    "type": "vector"
+                }
+            },
+            "layers": [
+                {
+                    "id": "traffic",
+                    "source": "mapbox-traffic",
+                    "source-layer": "traffic",
+                    "type": "line",
+                    "paint": {
+                        "line-width": 3.5,
+                        "line-color": [
+                            "case",
+                            [
+                                "==",
+                                "low",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#7ae074",
+                            [
+                                "==",
+                                "moderate",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#31c928",
+                            [
+                                "==",
+                                "heavy",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#ee4d4d",
+                            [
+                                "==",
+                                "severe",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#9b0000",
+                            "#000000"
+                        ]
+                    }
+                }
+            ]
+        }
+        var trafficEnabled = false;
+
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/' + mapStyle,
+            style: mapStyle,
             center: [4.9036, 52.3680],
             zoom: 10,
         });
+
+        if (localStorage.getItem("modalClosed") === null) {
+            el(".modal-wrapper").classList.remove("hidden");
+        }
 
         map.on('load', function () {
             loadMap();
@@ -70,10 +150,7 @@
                 getRoute(start);
                 resetMap();
             });
-            el(".spinner").classList.add("hiding");
-            setTimeout(function() {
-                el(".spinner").classList.add("hidden");
-            }, 1000);
+            hideSpinner();
         });
 
         function loadMap() {
@@ -93,6 +170,21 @@
                     sum: ["+", ["get", "FreeSpaceShort"], ["get", "FreeSpaceShort"]]
                 }
             });
+
+            map.addSource('mapbox-traffic', {
+                type: 'vector',
+                url: 'mapbox://mapbox.mapbox-traffic-v1'
+            });
+
+            var firstPOILabel = map.getStyle().layers.filter(function(obj){ 
+                return obj["source-layer"] == "poi_label";
+            });
+
+            if (trafficEnabled) {
+                for(var i = 0; i < traffic.layers.length; i++) {
+                    map.addLayer(traffic.layers[i], firstPOILabel[0].id);
+                }
+            }
 
             map.loadImage('assets/pin.png', function(error, image) {
                 if (error) throw error;
@@ -305,9 +397,9 @@
                             'line-cap': 'round'
                         },
                         paint: {
-                            'line-color': '#e50011',
-                            'line-width': 5,
-                            'line-opacity': 0.75
+                            'line-color': '#5b79ff',
+                            'line-width': 4,
+                            'line-opacity': 1
                         }
                     });
                 }
@@ -329,6 +421,10 @@
             map.removeLayer("point");
             map.removeSource("point");
             map.removeSource("parking_spots");
+            if (map.getLayer("traffic")) {
+                map.removeLayer("traffic");
+            }
+            map.removeSource("mapbox-traffic");
         }
 
         function applyFilters() {
@@ -352,6 +448,20 @@
                 }
             }
             return newData;
+        }
+
+        function hideSpinner() {
+            let spinner = el(".spinner");
+            spinner.classList.add("hiding");
+            setTimeout(function() {
+                spinner.classList.add("hidden");
+            }, 1000);
+        }
+
+        function showSpinner() {
+            let spinner = el(".spinner");
+            spinner.classList.remove("hiding");
+            spinner.classList.remove("hidden");
         }
 
         function id(id) {

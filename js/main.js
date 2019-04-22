@@ -11,8 +11,23 @@ id("directions").addEventListener("click", function() {
     }
 });
 
+id("close-modal").addEventListener("click", function() {
+    el(".modal-wrapper").classList.add("hidden");
+    localStorage.modalClosed = "true";
+});
+
 id("close-popup").addEventListener("click", function() {
     id("popup").classList.remove("open");
+});
+
+id("traffic").addEventListener("change", function() {
+    if (this.value === "true") {
+        trafficEnabled = true;
+        
+    } else {
+        trafficEnabled = false;
+    }
+    resetMap();
 });
 
 id("map-style").addEventListener("change", function() {
@@ -21,7 +36,7 @@ id("map-style").addEventListener("change", function() {
     map = null;
     map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/' + mapStyle,
+        style: mapStyle,
         center: [4.9036, 52.3680],
         zoom: 10,
     });

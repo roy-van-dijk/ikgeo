@@ -176,13 +176,9 @@
                 url: 'mapbox://mapbox.mapbox-traffic-v1'
             });
 
-            var firstPOILabel = map.getStyle().layers.filter(function(obj){ 
-                return obj["source-layer"] == "poi_label";
-            });
-
             if (trafficEnabled) {
                 for(var i = 0; i < traffic.layers.length; i++) {
-                    map.addLayer(traffic.layers[i], firstPOILabel[0].id);
+                    map.addLayer(traffic.layers[i]);
                 }
             }
 

@@ -5,7 +5,7 @@ id("hamburger").addEventListener("click", function() {
 
 id("directions").addEventListener("click", function() {
     if (localStorage.getItem("destLong") === null || localStorage.getItem("destLat") === null) {
-        alert("No location found. Please enable permissions for this website to use your location.")
+        alert("No location found. Please enable permissions for this website to use your location.");
     } else {
         getRoute([localStorage.destLong, localStorage.destLat]);
     }

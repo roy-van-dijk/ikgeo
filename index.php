@@ -65,6 +65,7 @@
         var clustering = true;
         var mapStyle = 'mapbox://styles/mapbox/light-v9';
         var start = [];
+        var end = [];
         var overlap = false;
         var loaded = false;
         const data = cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>));
@@ -174,7 +175,9 @@
                         ]
                     }
                 });
-                map.moveLayer("traffic", "route");
+                if (map.getLayer("route")) {
+                    map.moveLayer("traffic", "route");
+                }
             }
 
             // Current location point
@@ -316,7 +319,10 @@
             map.on('mouseleave', 'unclustered-point', function () { map.getCanvas().style.cursor = ''; });
 
             map.addControl(scale, 'bottom-right');
-            loaded = true;
+
+            if (localStorage.getItem("destLong") !== null || localStorage.getItem("destLat") !== null) {
+                getRoute([localStorage.destLong, localStorage.destLat]);
+            }
         }
 
         function cleanupJSON(json) {
@@ -340,6 +346,7 @@
         function getRoute(end) {
             var lat = localStorage.lat;
             var long = localStorage.long;
+            console.log(long + " " + lat + "\n" + end[0] + " " + end[1]);
             var url = 'https://api.mapbox.com/directions/v5/mapbox/driving/'+long+','+lat+';'+end[0]+','+end[1]+'?overview=full&geometries=geojson&access_token='+token;
             var req = new XMLHttpRequest();
             req.responseType = 'json';
@@ -383,6 +390,7 @@
                             'line-opacity': 1
                         }
                     });
+                    map.getSource('route').setData(geojson);
                 }
             };
             req.send();

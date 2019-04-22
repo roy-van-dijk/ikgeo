@@ -66,68 +66,8 @@
         var mapStyle = 'mapbox://styles/mapbox/light-v9';
         var start = [];
         var overlap = false;
+        var loaded = false;
         const data = cleanupJSON(JSON.parse(<?php echo getJSON("http://opd.it-t.nl/data/amsterdam/ParkingLocation.json") ?>));
-        var traffic = {
-            "version": 8,
-            "name": "Mapbox Traffic tileset v1",
-            "sources": {
-                "mapbox-traffic": {
-                    "url": "mapbox://mapbox.mapbox-traffic-v1",
-                    "type": "vector"
-                }
-            },
-            "layers": [
-                {
-                    "id": "traffic",
-                    "source": "mapbox-traffic",
-                    "source-layer": "traffic",
-                    "type": "line",
-                    "paint": {
-                        "line-width": 3.5,
-                        "line-color": [
-                            "case",
-                            [
-                                "==",
-                                "low",
-                                [
-                                    "get",
-                                    "congestion"
-                                ]
-                            ],
-                            "#7ae074",
-                            [
-                                "==",
-                                "moderate",
-                                [
-                                    "get",
-                                    "congestion"
-                                ]
-                            ],
-                            "#31c928",
-                            [
-                                "==",
-                                "heavy",
-                                [
-                                    "get",
-                                    "congestion"
-                                ]
-                            ],
-                            "#ee4d4d",
-                            [
-                                "==",
-                                "severe",
-                                [
-                                    "get",
-                                    "congestion"
-                                ]
-                            ],
-                            "#9b0000",
-                            "#000000"
-                        ]
-                    }
-                }
-            ]
-        }
         var trafficEnabled = false;
 
         var map = new mapboxgl.Map({
@@ -176,22 +116,65 @@
                 url: 'mapbox://mapbox.mapbox-traffic-v1'
             });
 
-            if (trafficEnabled) {
-                for(var i = 0; i < traffic.layers.length; i++) {
-                    map.addLayer(traffic.layers[i]);
-                }
-            }
-
             map.loadImage('assets/pin.png', function(error, image) {
                 if (error) throw error;
                 if (!map.hasImage('pin-active')) {
                     map.addImage('pin-active', image);
                 }
             });
-            
-            // if (localStorage.getItem("destLong") !== null && localStorage.getItem("destLat") !== null) {
-            //     getRoute(start);
-            // }
+
+            // Traffic layer
+            if (trafficEnabled) {
+                map.addLayer({
+                    "id": "traffic",
+                    "source": "mapbox-traffic",
+                    "source-layer": "traffic",
+                    "type": "line",
+                    "paint": {
+                        "line-width": 3.5,
+                        "line-color": [
+                            "case",
+                            [
+                                "==",
+                                "low",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#7ae074",
+                            [
+                                "==",
+                                "moderate",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#31c928",
+                            [
+                                "==",
+                                "heavy",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#ee4d4d",
+                            [
+                                "==",
+                                "severe",
+                                [
+                                    "get",
+                                    "congestion"
+                                ]
+                            ],
+                            "#9b0000",
+                            "#000000"
+                        ]
+                    }
+                });
+            }
 
             // Current location point
             map.addLayer({
@@ -332,6 +315,7 @@
             map.on('mouseleave', 'unclustered-point', function () { map.getCanvas().style.cursor = ''; });
 
             map.addControl(scale, 'bottom-right');
+            loaded = true;
         }
 
         function cleanupJSON(json) {
@@ -398,6 +382,7 @@
                             'line-opacity': 1
                         }
                     });
+                    map.moveLayer("route", "point");
                 }
             };
             req.send();

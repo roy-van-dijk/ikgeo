@@ -174,6 +174,7 @@
                         ]
                     }
                 });
+                map.moveLayer("traffic", "route");
             }
 
             // Current location point
@@ -382,7 +383,6 @@
                             'line-opacity': 1
                         }
                     });
-                    map.moveLayer("route", "point");
                 }
             };
             req.send();

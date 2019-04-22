@@ -346,7 +346,6 @@
         function getRoute(end) {
             var lat = localStorage.lat;
             var long = localStorage.long;
-            console.log(long + " " + lat + "\n" + end[0] + " " + end[1]);
             var url = 'https://api.mapbox.com/directions/v5/mapbox/driving/'+long+','+lat+';'+end[0]+','+end[1]+'?overview=full&geometries=geojson&access_token='+token;
             var req = new XMLHttpRequest();
             req.responseType = 'json';

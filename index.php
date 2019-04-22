@@ -451,7 +451,12 @@
             spinner.classList.add("hiding");
             setTimeout(function() {
                 spinner.classList.add("hidden");
-            }, 1000);
+                let screenwidth = window.innerWidth || document.documentElement.clientWidth|| document.body.clientWidth;
+                if (screenwidth > 800) {
+                    id("menu").classList.add("open");
+                    id("hamburger").classList.add("open");
+                }
+            }, 500);
         }
 
         function showSpinner() {

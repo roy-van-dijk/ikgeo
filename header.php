@@ -59,13 +59,13 @@
         </select>
     </div>
     <div class="setting">
-        <div class="title">Filter parking garages</div>
+        <div class="title">Hide parking garages with</div>
         <select class="form-control" name="" id="spot-filter">
-            <option value="0">0 spots</option>
-            <option value="10">Under 10 spots</option>
-            <option value="25">Under 25 spots</option>
-            <option value="50">Under 50 spots</option>
-            <option value="100">Under 100 spots</option>
+            <option value="0">0 spaces</option>
+            <option value="10">Under 10 spaces</option>
+            <option value="25">Under 25 spaces</option>
+            <option value="50">Under 50 spaces</option>
+            <option value="100">Under 100 spaces</option>
             <option value="10000" selected="selected">Don't hide</option>
         </select>
     </div>

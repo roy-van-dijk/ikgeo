@@ -362,6 +362,9 @@ button {
     font-size: 14px;
     overflow-y: auto;
 }
+.modal-content p {
+    font-family: Arial, Helvetica, sans-serif;
+}
 .modal-content h3 {
     text-align: center;
 }
@@ -373,6 +376,7 @@ button {
 }
 .modal-content button {
     float: right;
+    margin-top: 8px;
 }
 @media (min-width: 500px) {
     #popup {

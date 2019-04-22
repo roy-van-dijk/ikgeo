@@ -29,11 +29,11 @@
             </tr>
             <tr>
                 <td><div class="legend-10"></div></td>
-                <td>3000+ parking spots</td>
+                <td>3000+ parking spaces</td>
             </tr>
             <tr>
                 <td><div class="legend-5"></div></td>
-                <td>500+ parking spots</td>
+                <td>500+ parking spaces</td>
             </tr>
             <tr>
                 <td><div class="legend-2"></div></td>
@@ -327,7 +327,7 @@
                     spaceSelector.innerText = "Free -\xa0";
                 }
 
-                spaceSelector.innerText += freeSpaceShort + "\xa0spaces";
+                spaceSelector.innerText += freeSpaceShort + "\xa0parking space(s)";
             });
 
             map.on('mouseenter', 'clusters', function () { map.getCanvas().style.cursor = 'pointer'; });

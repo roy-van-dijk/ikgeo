@@ -320,9 +320,9 @@
 
             map.addControl(scale, 'bottom-right');
 
-            if (localStorage.getItem("destLong") !== null || localStorage.getItem("destLat") !== null) {
-                getRoute([localStorage.destLong, localStorage.destLat]);
-            }
+            // if (localStorage.getItem("destLong") !== null || localStorage.getItem("destLat") !== null) {
+            //     getRoute([localStorage.destLong, localStorage.destLat]);
+            // }
         }
 
         function cleanupJSON(json) {
